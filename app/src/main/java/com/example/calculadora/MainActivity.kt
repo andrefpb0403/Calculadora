@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
+    private var resultado: TextView? = null
+    private var equacao: TextView? = null
     private var operacao1: Double? = null
     private var operacaoPendente = ""
 
@@ -69,27 +71,47 @@ class MainActivity : AppCompatActivity() {
 
         val botoesOperadores = View.OnClickListener { v ->
             val opBotao = v as Button
-            val operacoes = equacao.text.toString().toDoubleOrNull()
-            if (operacoes != null) {
-                performanceCalculo(operacoes, opBotao.text.toString())
+            val valor = equacao.text.toString().toDoubleOrNull()
+            if (valor != null) {
+                performanceCalculo(valor, opBotao.text.toString())
             }
             operacaoPendente = opBotao.text.toString()
         }
-            btn_soma.setOnClickListener(botoesOperadores)
-            btn_subtracao.setOnClickListener(botoesOperadores)
-            btn_multiplicacao.setOnClickListener(botoesOperadores)
-            btn_divisao.setOnClickListener(botoesOperadores)
+        btn_soma.setOnClickListener(botoesOperadores)
+        btn_subtracao.setOnClickListener(botoesOperadores)
+        btn_multiplicacao.setOnClickListener(botoesOperadores)
+        btn_divisao.setOnClickListener(botoesOperadores)
 
         btn_resultado.setOnClickListener {
-            val resultado = resultado.text.toString().toDoubleOrNull()
-            if (resultado != null) {
-                performanceCalculo(resultado, operacaoPendente)
+            val valor = resultado.text.toString().toDoubleOrNull()
+            if (valor != null) {
+                performanceCalculo(valor, operacaoPendente)
             }
             operacaoPendente = ""
         }
 
         btn_limpar.setOnClickListener {
-
+            equacao.setText("")
+            resultado.setText("")
+            operacao1 = null
+            operacaoPendente = ""
         }
     }
+    fun performanceCalculo(valor: Double, operacao: String) {
+        if (operacao1 == null) {
+            operacao1 = valor
+        } else {
+            val resultadoFinal = when (operacao) {
+                "+" -> operacao1!! + valor
+                "-" -> operacao1!! - valor
+                "*" -> operacao1!! * valor
+                "/" -> operacao1!! / valor
+                else -> operacao1
+            }
+        }
+        resultado?.setText(operacao1.toString())
+        equacao?.setText(operacao1.toString())
+
+    }
+
 }
